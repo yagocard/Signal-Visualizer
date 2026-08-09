@@ -1,6 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def get_phase(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Invalid input! Please enter a number.")
 
 def get_float(prompt):
     while True:
@@ -38,9 +44,11 @@ def continuous_signal():
     amplitude = get_float("Enter amplitude [V]: ")
     frequency = get_positive_float("Enter frequency [Hz]: ")
     sample_number = get_positive_integer("Enter sample number [n]: ")
+    phase_deg = get_phase("Enter phase [deg]: ")
+    phase_rad = np.deg2rad(phase_deg)
 
     t = np.linspace(0, 1 / frequency, sample_number)
-    signal = amplitude * np.sin(2 * np.pi * frequency * t)
+    signal = amplitude * np.sin(2 * np.pi * frequency * t+ phase_rad)
 
     plt.plot(t, signal)
     plt.xlabel("Time (s)")
@@ -54,9 +62,11 @@ def discrete_signal():
     amplitude = get_float("Enter amplitude [V]: ")
     omega = get_float("Enter angular frequency [rad/sample]: ")
     sample_number = get_positive_integer("Enter sample number [n]: ")
+    phase_deg = get_phase("Enter phase [deg]: ")
+    phase_rad = np.deg2rad(phase_deg)
 
     n = np.arange(sample_number)
-    signal = amplitude * np.sin(omega * n)
+    signal = amplitude * np.sin((omega * n)+ phase_rad)
 
     plt.stem(n, signal)
     plt.xlabel("Sample index [n]")
