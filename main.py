@@ -43,12 +43,13 @@ def get_positive_integer(prompt):
 def continuous_signal():
     amplitude = get_float("Enter amplitude [V]: ")
     frequency = get_positive_float("Enter frequency [Hz]: ")
-    sample_number = get_positive_integer("Enter sample number [n]: ")
+    duration = get_positive_float("Enter duration [s]: ")
+    sampling_frequency = get_positive_float("Enter sampling frequency [Hz]: ")
     phase_deg = get_phase("Enter phase [deg]: ")
     phase_rad = np.deg2rad(phase_deg)
 
-    t = np.linspace(0, 1 / frequency, sample_number)
-    signal = amplitude * np.sin(2 * np.pi * frequency * t+ phase_rad)
+    t = np.arange(0, duration, 1 / sampling_frequency)
+    signal = amplitude * np.sin(2 * np.pi * frequency * t + phase_rad)
 
     plt.plot(t, signal)
     plt.xlabel("Time (s)")
