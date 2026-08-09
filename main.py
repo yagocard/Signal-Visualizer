@@ -137,12 +137,34 @@ def discrete_signal():
 
     n = np.arange(sample_number)
     signal = amplitude * np.sin((omega * n)+ phase_rad)
+    fft_result = np.fft.fft(signal)
+    magnitude = np.abs(fft_result)
+    frequency_axis = np.fft.fftfreq(sample_number, d=1)
+    omega_axis = 2 * np.pi * frequency_axis
 
-    plt.stem(n, signal)
-    plt.xlabel("Sample index [n]")
-    plt.ylabel("Amplitude [V]")
-    plt.title("Discrete-Time Sine Wave")
-    plt.grid(True)
+    # Positive-frequency half
+    half = sample_number // 2
+    positive_omega = omega_axis[:half]
+    positive_magnitude = (2 / sample_number) * magnitude[:half]
+
+    # Plots
+    fig, ax = plt.subplots(2, 1)
+
+    # Time domain
+    ax[0].stem(n, signal)
+    ax[0].set_xlabel("Sample index [n]")
+    ax[0].set_ylabel("Amplitude [V]")
+    ax[0].set_title("Discrete-Time Signal")
+    ax[0].grid(True)
+
+    # Frequency domain
+    ax[1].stem(positive_omega, positive_magnitude)
+    ax[1].set_xlabel("Angular Frequency [rad/sample]")
+    ax[1].set_ylabel("Magnitude")
+    ax[1].set_title("Frequency Spectrum")
+    ax[1].grid(True)
+
+    plt.tight_layout()
     plt.show()
 
 
