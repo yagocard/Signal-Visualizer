@@ -57,13 +57,42 @@ def continuous_signal():
         )
     t = np.arange(0, duration, 1 / sampling_frequency)
     signal = amplitude * np.sin(2 * np.pi * frequency * t + phase_rad)
+    # FFT
+    fft_result = np.fft.fft(signal)
+    magnitude = np.abs(fft_result)
 
-    plt.plot(t, signal)
-    plt.xlabel("Time (s)")
-    plt.ylabel("Amplitude [V]")
-    plt.title("Continuous-Time Sine Wave")
-    plt.grid(True)
+    # Frequency axis
+    frequency_axis = np.fft.fftfreq(
+        len(signal),
+        d=1 / sampling_frequency
+    )
+
+    half = len(signal) // 2
+
+    positive_frequency = frequency_axis[:half]
+    positive_magnitude = (2 / len(signal)) * magnitude[:half]
+
+
+
+    fig, ax = plt.subplots(2, 1)
+
+    # Time domain
+    ax[0].plot(t, signal)
+    ax[0].set_xlabel("Time [s]")
+    ax[0].set_ylabel("Amplitude [V]")
+    ax[0].set_title("Time Domain")
+    ax[0].grid(True)
+
+    # Frequency domain
+    ax[1].stem(positive_frequency, positive_magnitude)
+    ax[1].set_xlabel("Frequency [Hz]")
+    ax[1].set_ylabel("Magnitude")
+    ax[1].set_title("Frequency Spectrum")
+    ax[1].grid(True)
+
+    plt.tight_layout()
     plt.show()
+
 
 
 def discrete_signal():
