@@ -47,7 +47,14 @@ def continuous_signal():
     sampling_frequency = get_positive_float("Enter sampling frequency [Hz]: ")
     phase_deg = get_phase("Enter phase [deg]: ")
     phase_rad = np.deg2rad(phase_deg)
+    nyquist_rate = 2 * frequency
 
+    if sampling_frequency < nyquist_rate:
+        print(
+            f"Warning: Nyquist criterion not satisfied! "
+            f"Sampling frequency should be at least {nyquist_rate} Hz. "
+            f"Aliasing may occur."
+        )
     t = np.arange(0, duration, 1 / sampling_frequency)
     signal = amplitude * np.sin(2 * np.pi * frequency * t + phase_rad)
 
