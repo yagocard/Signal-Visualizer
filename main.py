@@ -1,6 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def get_waveform(prompt):
+    while True:
+        waveform = input(prompt).strip().lower()
+
+        if waveform in ("sine", "cosine", "square", "sawtooth"):
+            return waveform
+
+        print("Invalid waveform! Please enter sine, cosine, square, or sawtooth.")
 def get_phase(prompt):
     while True:
         try:
@@ -41,6 +49,9 @@ def get_positive_integer(prompt):
 
 
 def continuous_signal():
+    waveform = get_waveform(
+        "Select waveform (sine/cosine/square/sawtooth): "
+    )
     amplitude = get_float("Enter amplitude [V]: ")
     frequency = get_positive_float("Enter frequency [Hz]: ")
     duration = get_positive_float("Enter duration [s]: ")
@@ -56,7 +67,29 @@ def continuous_signal():
             f"Aliasing may occur."
         )
     t = np.arange(0, duration, 1 / sampling_frequency)
-    signal = amplitude * np.sin(2 * np.pi * frequency * t + phase_rad)
+    match waveform:
+        case "sine":
+            signal = amplitude * np.sin(
+                2 * np.pi * frequency * t + phase_rad
+            )
+
+        case "cosine":
+            signal = amplitude * np.cos(
+                2 * np.pi * frequency * t + phase_rad
+            )
+
+        case "square":
+            signal = amplitude * np.sign(
+                np.sin(2 * np.pi * frequency * t + phase_rad)
+            )
+        case "sawtooth":
+            signal = amplitude * (
+                    2 * ((frequency * t + phase_rad / (2 * np.pi)) % 1) - 1
+            )
+
+        case _:
+            print("Invalid waveform!")
+            return
     # FFT
     fft_result = np.fft.fft(signal)
     magnitude = np.abs(fft_result)
